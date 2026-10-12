@@ -769,6 +769,24 @@ button { cursor: pointer; }
   gap: 26px;
   align-items: start;
 }
+
+/* Keep the reading progress bar on its own full-width grid row. */
+.article-page > .reading-progress {
+  grid-column: 1 / -1;
+  width: 100%;
+  min-width: 0;
+  margin-bottom: -4px;
+}
+
+.article-page > .article-shell {
+  grid-column: 1;
+  min-width: 0;
+}
+
+.article-page > .article-sidepanel {
+  grid-column: 2;
+  min-width: 0;
+}
 .article-shell,
 .article-sidepanel {
   min-width: 0;
