@@ -445,16 +445,30 @@ export const getLanguageText = (language, key, fallback = '') => {
 
 export function localizeArticle(article, language = 'en') {
   if (!article || language === 'en') return article;
-  const key = normalizeTranslationKey(article.title);
-  const localeMap = articleTranslations[key] || articleTranslations[article.title];
-  const translation = localeMap?.[language] || null;
+
+  // Match translation keys by normalized English title so punctuation,
+  // capitalization, or whitespace differences from the API do not break lookup.
+  const title = String(article.title || '');
+  const normalizedTitle = normalizeTranslationKey(title);
+  const dictionaryKey = Object.keys(articleTranslations).find(
+    (candidate) => normalizeTranslationKey(candidate) === normalizedTitle,
+  );
+  const localeMap =
+    articleTranslations[title] ||
+    (dictionaryKey ? articleTranslations[dictionaryKey] : null);
+  const translation = localeMap?.[language];
+
+  // Preserve original data when a translation for this language is unavailable.
   if (!translation) return article;
 
   return {
     ...article,
     title: translation.title || article.title,
     summary: translation.summary || article.summary,
-    content: Array.isArray(translation.content) && translation.content.length ? translation.content : article.content,
+    content:
+      Array.isArray(translation.content) && translation.content.length
+        ? translation.content
+        : article.content,
     author: translation.author || article.author,
     readTime: translation.readTime || article.readTime,
   };

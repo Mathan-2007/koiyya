@@ -100,7 +100,16 @@ export default function ArticlePage({ articles, language = 'en' }) {
           </div>
         </div>
 
-        <img src={currentArticle.image} alt={currentArticle.title} className="article-image" />
+        {currentArticle.image ? (
+          <img
+            src={currentArticle.image}
+            alt={currentArticle.title}
+            className="article-image"
+            onError={(event) => {
+              event.currentTarget.hidden = true;
+            }}
+          />
+        ) : null}
 
         <div className="article-body">
           {paragraphs.map((paragraph, index) => (
